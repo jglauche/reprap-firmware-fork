@@ -37,7 +37,7 @@ Otherwise, we have to do the work ourselves...
 */
 
 #if USE_EXTRUDER_CONTROLLER == false
-extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, byte se_pin)
+extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin)
 {
          motor_dir_pin = md_pin;
          motor_speed_pin = ms_pin;
@@ -82,7 +82,7 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
         e_speed = 0;
         target_celsius = 0;
         max_celsius = 0;
-        heater_low = 64;
+        heater_low = 132; // jglauche: was 64, doesn't do so big temperature drops now
         heater_high = 255;
         heater_current = 0;
         valve_open = false;
@@ -255,7 +255,7 @@ void extruder::manage()
 }
 
 
-#if 0
+
 void extruder::set_speed(float sp)
 {
   // DC motor?
@@ -306,5 +306,3 @@ void extruder::interrupt()
 }
 
 #endif
-#endif
-

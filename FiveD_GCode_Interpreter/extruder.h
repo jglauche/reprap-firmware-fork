@@ -50,7 +50,8 @@ private:
     bool valve_open;
 
 // The pins we control
-    byte motor_dir_pin, motor_speed_pin, heater_pin, fan_pin, temp_pin, valve_dir_pin, valve_en_pin, step_en_pin;
+    byte motor_dir_pin, motor_speed_pin, heater_pin, fan_pin, temp_pin, valve_dir_pin, valve_en_pin;
+    signed int step_en_pin;
     
      byte wait_till_hot();
      //byte wait_till_cool();
@@ -59,19 +60,19 @@ private:
      
 public:
 
-   extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, byte se_pin);
+   extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin);
    void wait_for_temperature();
    void valve_set(bool open, int dTime);
 
    void set_direction(bool direction);
-//   void set_speed(float es);
+   void set_speed(float es);
    void set_cooler(byte e_speed);
    void set_temperature(int temp);
    int get_temperature();
    void manage();
 // Interrupt setup and handling functions for stepper-driven extruders
    
-//   void interrupt();
+   void interrupt();
    void step();
 
    void enableStep();

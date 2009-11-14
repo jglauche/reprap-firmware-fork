@@ -1,5 +1,19 @@
 // Yep, this is actually -*- c++ -*-
 
+/*
+  This is a fork of Repraps FiveD Gcode Firmware
+  License: GPL
+  
+  Changes from official firmware:
+    - added support for Arduino Mega
+    - changed determination of using the extruder controller from MOTHERBOARD > 1 to USE_EXTRUDER_CONTROLLER 
+    - fixed some bugs checking unsigned byte < 0 ...
+    - updated interrupt function SIGNAL -> ISR
+    - re-enabled 3D gcode support
+
+*/
+
+
 // #ifndef __AVR_ATmega644P__
 // #error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
 // #endif

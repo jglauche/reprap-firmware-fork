@@ -71,7 +71,7 @@
 #define EXTRUDER_0_TEMPERATURE_PIN  (byte)4    // Analogue input
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)17
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)13  // Valve needs to be redesigned not to need this
-#define EXTRUDER_0_STEP_ENABLE_PIN  (byte)3  // 3 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_0_STEP_ENABLE_PIN  (signed int)3  // 3 - Conflicts with the fan; set -ve if no stepper
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)4
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)0
@@ -80,7 +80,7 @@
 #define EXTRUDER_1_TEMPERATURE_PIN  (byte)3  // Analogue input
 #define EXTRUDER_1_VALVE_DIR_PIN    (byte) 6
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)5   // Valve needs to be redesigned not to need this 
-#define EXTRUDER_1_STEP_ENABLE_PIN  (byte)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_1_STEP_ENABLE_PIN  (signed int)-1  // 7 - Conflicts with the fan; set -ve if no stepper
 
 
 /****************************************************************************************
@@ -167,7 +167,7 @@
 #define EXTRUDER_0_TEMPERATURE_PIN  (byte)3    // 57 Analogue input 3
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)-1
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)-1  // Valve needs to be redesigned not to need this
-#define EXTRUDER_0_STEP_ENABLE_PIN  (byte)33 
+#define EXTRUDER_0_STEP_ENABLE_PIN  (signed int)33 
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)-1
@@ -176,7 +176,7 @@
 #define EXTRUDER_1_TEMPERATURE_PIN  (byte)-1  // Analogue input
 #define EXTRUDER_1_VALVE_DIR_PIN    (byte)-1
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)-1   // Valve needs to be redesigned not to need this 
-#define EXTRUDER_1_STEP_ENABLE_PIN  (byte)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_1_STEP_ENABLE_PIN  (signed int)-1  // 7 - Conflicts with the fan; set -ve if no stepper
 
 
 #else
