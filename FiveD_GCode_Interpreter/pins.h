@@ -178,6 +178,58 @@
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)-1   // Valve needs to be redesigned not to need this 
 #define EXTRUDER_1_STEP_ENABLE_PIN  (signed int)-1  // 7 - Conflicts with the fan; set -ve if no stepper
 
+/****************************************************************************************
+* Duemilanove w/ ATMega328P pin assignment
+*
+****************************************************************************************/
+
+#elif MOTHERBOARD == 4
+
+#define USE_EXTRUDER_CONTROLLER false
+
+#define X_STEP_PIN (byte)19
+#define X_DIR_PIN (byte)18
+#define X_MIN_PIN (byte)17
+#define X_MAX_PIN (byte)-1
+#define X_ENABLE_PIN (byte)-1
+
+#define Y_STEP_PIN (byte)10
+#define Y_DIR_PIN (byte)7
+#define Y_MIN_PIN (byte)8
+#define Y_MAX_PIN (byte)-1
+#define Y_ENABLE_PIN (byte)-1
+
+#define Z_STEP_PIN (byte)13
+#define Z_DIR_PIN (byte)3
+#define Z_MIN_PIN (byte)4
+#define Z_MAX_PIN (byte)-1
+#define Z_ENABLE_PIN (byte)-1
+
+#define AUX_FAN_PIN (byte)9
+#define BASE_TEMP_PIN (byte)1  // Analogue input
+#define BASE_HEATER_PIN   (byte)1
+
+#define POWER_SUPPLY_PIN (byte)16
+
+//extruder pins
+#define EXTRUDER_0_MOTOR_SPEED_PIN   (byte)11
+#define EXTRUDER_0_MOTOR_DIR_PIN     (byte)12
+#define EXTRUDER_0_HEATER_PIN        (byte)6
+#define EXTRUDER_0_FAN_PIN           (byte)5
+#define EXTRUDER_0_TEMPERATURE_PIN  (byte)0   // Analogue input
+#define EXTRUDER_0_VALVE_DIR_PIN     (byte)-1
+#define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)-1  // Valve needs to be redesigned not to need this
+#define EXTRUDER_0_STEP_ENABLE_PIN  (byte)2  // 3 - Conflicts with the fan; set -ve if no stepper
+
+#define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
+#define EXTRUDER_1_MOTOR_DIR_PIN    (byte)-1
+#define EXTRUDER_1_HEATER_PIN        (byte)-1
+#define EXTRUDER_1_FAN_PIN           (byte)-1
+#define EXTRUDER_1_TEMPERATURE_PIN  (byte)-1  // Analogue input
+#define EXTRUDER_1_VALVE_DIR_PIN    (byte)-1
+#define EXTRUDER_1_VALVE_ENABLE_PIN (byte)-1   // Valve needs to be redesigned not to need this 
+#define EXTRUDER_1_STEP_ENABLE_PIN  (byte)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+
 
 #else
 

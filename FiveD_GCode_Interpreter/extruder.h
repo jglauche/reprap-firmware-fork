@@ -20,8 +20,8 @@ void new_extruder(byte e);
 
 #if USE_EXTRUDER_CONTROLLER == false
 
-#define EXTRUDER_FORWARD true
-#define EXTRUDER_REVERSE false
+#define EXTRUDER_FORWARD false
+#define EXTRUDER_REVERSE true
 
 class extruder
 {
@@ -65,14 +65,15 @@ public:
    void valve_set(bool open, int dTime);
 
    void set_direction(bool direction);
-   void set_speed(float es);
+   //void set_speed(float es);
    void set_cooler(byte e_speed);
-   void set_temperature(int temp);
+   void set_target_temperature(int temp);
+   int get_target_temperature();
    int get_temperature();
    void manage();
 // Interrupt setup and handling functions for stepper-driven extruders
    
-   void interrupt();
+   //void interrupt();
    void step();
 
    void enableStep();
@@ -124,7 +125,7 @@ inline void extruder::wait_for_temperature()
 inline void extruder::set_direction(bool dir)
 {
 	e_direction = dir;
-	digitalWrite(motor_dir_pin, !e_direction); 
+	digitalWrite(motor_dir_pin, e_direction); 
 }
 
 inline void extruder::set_cooler(byte sp)

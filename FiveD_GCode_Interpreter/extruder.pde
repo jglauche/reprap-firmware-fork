@@ -82,7 +82,7 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
         e_speed = 0;
         target_celsius = 0;
         max_celsius = 0;
-        heater_low = 132; // jglauche: was 64, doesn't do so big temperature drops now
+        heater_low = 128; // mccoyn: was 132, doesn't overshoot temperature so much now
         heater_high = 255;
         heater_current = 0;
         valve_open = false;
@@ -96,7 +96,7 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
         e_direction = EXTRUDER_FORWARD;
         
         //default to cool
-        set_temperature(target_celsius);
+        set_target_temperature(target_celsius);
 }
 
 
@@ -159,7 +159,7 @@ void extruder::valve_set(bool open, int dTime)
 }
 
 
-void extruder::set_temperature(int temp)
+void extruder::set_target_temperature(int temp)
 {
 	target_celsius = temp;
 	max_celsius = (temp*11)/10;
@@ -167,6 +167,11 @@ void extruder::set_temperature(int temp)
         // If we've turned the heat off, we might as well disable the extrude stepper
        // if(target_celsius < 1)
         //  disableStep(); 
+}
+
+int extruder::get_target_temperature()
+{
+        return target_celsius;
 }
 
 /**
@@ -197,8 +202,8 @@ int extruder::get_temperature()
         // Overflow: Set to last value in the table
         if (i == NUMTEMPS) celsius = temptable[i-1][1];
 
-        // Clamp to byte
-        if (celsius > 255) celsius = 255; 
+        // Clamp
+        if (celsius > 511) celsius = 511;
         else if (celsius < 0) celsius = 0; 
   
 	return celsius;
@@ -255,7 +260,7 @@ void extruder::manage()
 }
 
 
-
+#if 0
 void extruder::set_speed(float sp)
 {
   // DC motor?
@@ -304,5 +309,5 @@ void extruder::interrupt()
       extrude_step_count = 0;
     }
 }
-
+#endif
 #endif

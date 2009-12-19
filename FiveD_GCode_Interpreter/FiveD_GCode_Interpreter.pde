@@ -6,11 +6,13 @@
   
   Changes from official firmware:
     - added support for Arduino Mega
+    - added support fo Arudino Duemilanove w/ ATMega328P
     - changed determination of using the extruder controller from MOTHERBOARD > 1 to USE_EXTRUDER_CONTROLLER 
     - fixed some bugs checking unsigned byte < 0 ...
     - updated interrupt function SIGNAL -> ISR
     - re-enabled 3D gcode support
-
+    - added auto-shutdown on idle
+    - added base heater command
 */
 
 
@@ -143,11 +145,38 @@ void setup()
 
 }
 
-
+bool idling = true;
+bool waitingForIdle = false;
+signed long idleTimeout = 0;
 void loop()
 {
 	manage_all_extruders();
-        get_and_do_command();        
+        if (get_and_do_command())
+        {
+                if (idling)
+                {
+                        pinMode(POWER_SUPPLY_PIN, OUTPUT);
+                        digitalWrite(POWER_SUPPLY_PIN, 0);  // Set the pin to GND to turn on power supply
+                        idling = false;
+                        waitingForIdle = true;
+                }
+        }
+        else if (  (!idling) && (qEmpty()) && (ex[extruder_in_use]->get_target_temperature() < 1)  )
+        {
+                if (waitingForIdle)
+                {
+                        idleTimeout = (signed long)millis() + 10000;
+                        waitingForIdle = false;
+                }
+                else
+                {
+                        if (idleTimeout - (signed long)millis() < 0)
+                        {
+                                pinMode(POWER_SUPPLY_PIN, INPUT);    // Set the pin to floating to turn off power supply
+                                idling = true;
+                        }
+                }
+        }
 }
 
 //******************************************************************************************

@@ -115,7 +115,7 @@ inline void init_process_string()
 
 // Get a command and process it
 
-void get_and_do_command()
+bool get_and_do_command()
 {
 	//read in characters if we got them.
 	if (Serial.available())
@@ -153,7 +153,7 @@ void get_and_do_command()
                 cmdbuffer[serial_count] = 0;
                 
 		//process our command!
-		process_string(cmdbuffer, serial_count);
+		bool busy = process_string(cmdbuffer, serial_count);
 
 		//clear command.
 		init_process_string();
@@ -167,6 +167,12 @@ void get_and_do_command()
                   debugstring[0] = 0;
                 } else
                   Serial.println("ok");
+                  
+    return busy;
+	}
+	else
+	{
+	  return false;
 	}
 }
 
@@ -210,11 +216,11 @@ int parse_string(struct GcodeParser * gc, char instruction[ ], int size)
 
 
 //Read the string and execute instructions
-void process_string(char instruction[], int size)
+bool process_string(char instruction[], int size)
 {
 	//the character / means delete block... used for comments and stuff.
 	if (instruction[0] == '/')	
-		return;
+		return false;
 
         float fr;
         
@@ -281,12 +287,12 @@ void process_string(char instruction[], int size)
                                 fp.f = FAST_XY_FEEDRATE;
                                 qMove(fp);
                                 fp.f = fr;
-                                return;
+                                return true;
                                 
                         // Controlled move
 			case 1:
                                 qMove(fp);
-                                return;
+                                return true;
                                 
                         //go home.
 			case 28:
@@ -317,7 +323,7 @@ void process_string(char instruction[], int size)
                                 where_i_am.z = 0;
                                 where_i_am.f = SLOW_XY_FEEDRATE;     // Most sensible feedrate to leave it in                    
 
-				return;
+				return true;
 
 
                   default:
@@ -401,25 +407,25 @@ void process_string(char instruction[], int size)
 			//turn extruder on, forward
 			case 101:
 				ex[extruder_in_use]->set_direction(1);
-				ex[extruder_in_use]->set_speed(extruder_speed);
+				//ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
 
 			//turn extruder on, reverse
 			case 102:
 				ex[extruder_in_use]->set_direction(0);
-				ex[extruder_in_use]->set_speed(extruder_speed);
+				//ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
 
 			//turn extruder off
 			case 103:
-				ex[extruder_in_use]->set_speed(0);
+				//ex[extruder_in_use]->set_speed(0);
 				break;
 
 			//custom code for temperature control
 			case 104:
 				if (gc.seen & GCODE_S)
 				{
-					ex[extruder_in_use]->set_temperature((int)gc.S);
+					ex[extruder_in_use]->set_target_temperature((int)gc.S);
 				}
 				break;
 
@@ -427,7 +433,7 @@ void process_string(char instruction[], int size)
 			case 105:
 				Serial.print("T:");
 				Serial.println(ex[extruder_in_use]->get_temperature());
-				break;
+				return false;
 
 			//turn fan on
 			case 106:
@@ -445,6 +451,10 @@ void process_string(char instruction[], int size)
 					extruder_speed = gc.S;
 				break;
 
+ 			case 109: // Base plate heater on/off
+ 				if (gc.seen & GCODE_S)
+ 				  digitalWrite(BASE_HEATER_PIN, gc.S != 0);
+ 				break;
 
 // The valve (real, or virtual...) is now the way to control any extruder (such as
 // a pressurised paste extruder) that cannot move using E codes.
@@ -475,7 +485,10 @@ void process_string(char instruction[], int size)
         {
             while(!qEmpty()) delay(WAITING_DELAY);
             new_extruder(gc.T);
+            return false;
         }
+        
+        return true;
 }
 
 int scan_float(char *str, float *valp, unsigned int *seen, unsigned int flag)

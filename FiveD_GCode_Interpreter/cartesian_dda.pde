@@ -85,7 +85,7 @@ void cartesian_dda::set_units(bool using_mm)
       units.y = Y_STEPS_PER_INCH;
       units.z = Z_STEPS_PER_INCH;
       units.e = E_STEPS_PER_INCH;
-      units.f = 1.0;  
+      units.f = 1.0;
     }
 }
 
@@ -336,9 +336,9 @@ void cartesian_dda::dda_start()
 	digitalWrite(Z_DIR_PIN, z_direction);
 #endif
         if(e_direction)
-          ex[extruder_in_use]->set_direction(1);
+          ex[extruder_in_use]->set_direction(EXTRUDER_FORWARD);
         else
-          ex[extruder_in_use]->set_direction(0);
+          ex[extruder_in_use]->set_direction(EXTRUDER_REVERSE);
   
     //turn on steppers to start moving =)
     
