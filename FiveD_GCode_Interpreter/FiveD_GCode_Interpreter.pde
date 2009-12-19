@@ -16,10 +16,6 @@
 */
 
 
-// #ifndef __AVR_ATmega644P__
-// #error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
-// #endif
-
 #include <ctype.h>
 #include <HardwareSerial.h>
 #include "WProgram.h"

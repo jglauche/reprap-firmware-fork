@@ -43,6 +43,10 @@
 ****************************************************************************************/
 #elif MOTHERBOARD == 1
 
+#ifndef __AVR_ATmega644P__
+#error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
+#endif
+
 #define USE_EXTRUDER_CONTROLLER false
 
 #define X_STEP_PIN (byte)15
@@ -90,6 +94,9 @@
 
 #elif MOTHERBOARD == 2
 
+#ifndef __AVR_ATmega644P__
+#error Oops!  Make sure you have 'Sanguino' selected from the 'Tools -> Boards' menu.
+#endif
 
 #define USE_EXTRUDER_CONTROLLER true
 
@@ -184,6 +191,10 @@
 ****************************************************************************************/
 
 #elif MOTHERBOARD == 4
+
+#ifndef __AVR_ATmega328P__
+#error Oops!  Make sure you have 'Arduino Duemilanove w/ ATMega328' selected from the 'Tools -> Boards' menu.
+#endif
 
 #define USE_EXTRUDER_CONTROLLER false
 
