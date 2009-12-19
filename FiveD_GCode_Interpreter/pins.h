@@ -25,6 +25,8 @@
 #define Z_MIN_PIN (byte)17
 #define Z_MAX_PIN (byte)16
 
+#define BASE_HEATER_PIN   (byte)-1
+#define POWER_SUPPLY_PIN (byte)-1
 
 //extruder pins
 #define EXTRUDER_0_MOTOR_SPEED_PIN  (byte)11
@@ -66,6 +68,9 @@
 #define Z_MIN_PIN (byte)1
 #define Z_MAX_PIN (byte)2
 #define Z_ENABLE_PIN (byte)31
+
+#define BASE_HEATER_PIN   (byte)-1
+#define POWER_SUPPLY_PIN (byte)-1
 
 //extruder pins
 #define EXTRUDER_0_MOTOR_SPEED_PIN   (byte)12
@@ -121,6 +126,9 @@
 #define Z_MIN_PIN       30
 #define Z_MAX_PIN       31
 
+#define BASE_HEATER_PIN   (byte)-1
+#define POWER_SUPPLY_PIN (byte)-1
+
 //our pin for debugging.
 #define DEBUG_PIN        0
 
@@ -164,6 +172,8 @@
 #define Z_MAX_PIN (byte)21
 #define Z_ENABLE_PIN (byte)30
 
+#define BASE_HEATER_PIN   (byte)-1
+#define POWER_SUPPLY_PIN (byte)-1
 
 
 //extruder pins
@@ -216,10 +226,7 @@
 #define Z_MAX_PIN (byte)-1
 #define Z_ENABLE_PIN (byte)-1
 
-#define AUX_FAN_PIN (byte)9
-#define BASE_TEMP_PIN (byte)1  // Analogue input
 #define BASE_HEATER_PIN   (byte)1
-
 #define POWER_SUPPLY_PIN (byte)16
 
 //extruder pins
