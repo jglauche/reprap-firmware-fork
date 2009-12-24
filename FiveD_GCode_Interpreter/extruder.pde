@@ -82,7 +82,7 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
         e_speed = 0;
         target_celsius = 0;
         max_celsius = 0;
-        heater_low = 128; // mccoyn: was 132, doesn't overshoot temperature so much now
+        heater_low = 64;
         heater_high = 255;
         heater_current = 0;
         valve_open = false;
