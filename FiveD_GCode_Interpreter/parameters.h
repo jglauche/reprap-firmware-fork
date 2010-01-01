@@ -85,17 +85,17 @@
 
 inline void enableTimerInterrupt() 
 {
-   TIMSK1 |= (1<<OCIE1A);
+  TIMSK1 |= (1<<OCIE1A);
 }
-	
+
 inline void disableTimerInterrupt() 
 {
-     TIMSK1 &= ~(1<<OCIE1A);
+  TIMSK1 &= ~(1<<OCIE1A);
 }
-        
+
 inline void setTimerCeiling(unsigned int c) 
 {
-    OCR1A = c;
+  OCR1A = c;
 }
 
 inline void resetTimer()
@@ -104,3 +104,4 @@ inline void resetTimer()
 }
 
 #endif
+

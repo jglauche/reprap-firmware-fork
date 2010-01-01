@@ -37,7 +37,7 @@ Otherwise, we have to do the work ourselves...
 */
 
 #if USE_EXTRUDER_CONTROLLER == false
-extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin)
+extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin, byte low_heat, byte high_heat)
 {
          motor_dir_pin = md_pin;
          motor_speed_pin = ms_pin;
@@ -47,6 +47,8 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
          valve_dir_pin = vd_pin;
          valve_en_pin = ve_pin;
          step_en_pin = se_pin;
+         heater_low = low_heat;
+         heater_high = high_heat;
          
 	//setup our pins
 	pinMode(motor_dir_pin, OUTPUT);
@@ -82,8 +84,6 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
         e_speed = 0;
         target_celsius = 0;
         max_celsius = 0;
-        heater_low = 64;
-        heater_high = 255;
         heater_current = 0;
         valve_open = false;
         

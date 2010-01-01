@@ -37,7 +37,8 @@
 #define EXTRUDER_0_VALVE_DIR_PIN             (byte)16       //NB: Conflicts with Max Z!!!!
 #define EXTRUDER_0_VALVE_ENABLE_PIN          (byte)15 
 #define EXTRUDER_0_STEP_ENABLE_PIN  5 // 5 - NB conflicts with the fan; set -ve if no stepper
-
+#define EXTRUDER_0_LOW_HEAT         (byte)64
+#define EXTRUDER_0_HIGH_HEAT        (byte)255
 
 /****************************************************************************************
 * Sanguino/RepRap Motherboard with direct-drive extruders
@@ -81,6 +82,9 @@
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)17
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)13  // Valve needs to be redesigned not to need this
 #define EXTRUDER_0_STEP_ENABLE_PIN  (signed int)3  // 3 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_0_LOW_HEAT         (byte) 64
+#define EXTRUDER_0_HIGH_HEAT        (byte) 255
+
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)4
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)0
@@ -90,6 +94,8 @@
 #define EXTRUDER_1_VALVE_DIR_PIN    (byte) 6
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)5   // Valve needs to be redesigned not to need this 
 #define EXTRUDER_1_STEP_ENABLE_PIN  (signed int)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_1_LOW_HEAT         (byte)64
+#define EXTRUDER_1_HIGH_HEAT        (byte)255
 
 
 /****************************************************************************************
@@ -185,6 +191,8 @@
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)-1
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)-1  // Valve needs to be redesigned not to need this
 #define EXTRUDER_0_STEP_ENABLE_PIN  (signed int)33 
+#define EXTRUDER_0_LOW_HEAT         (byte)64
+#define EXTRUDER_0_HIGH_HEAT        (byte)255
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)-1
@@ -194,6 +202,8 @@
 #define EXTRUDER_1_VALVE_DIR_PIN    (byte)-1
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)-1   // Valve needs to be redesigned not to need this 
 #define EXTRUDER_1_STEP_ENABLE_PIN  (signed int)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_1_LOW_HEAT         (byte)64
+#define EXTRUDER_1_HIGH_HEAT        (byte)255
 
 /****************************************************************************************
 * Duemilanove w/ ATMega328P pin assignment
@@ -238,6 +248,8 @@
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)-1
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)-1  // Valve needs to be redesigned not to need this
 #define EXTRUDER_0_STEP_ENABLE_PIN  (byte)2  // 3 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_0_LOW_HEAT         (byte)64
+#define EXTRUDER_0_HIGH_HEAT        (byte)255
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)-1
@@ -247,6 +259,8 @@
 #define EXTRUDER_1_VALVE_DIR_PIN    (byte)-1
 #define EXTRUDER_1_VALVE_ENABLE_PIN (byte)-1   // Valve needs to be redesigned not to need this 
 #define EXTRUDER_1_STEP_ENABLE_PIN  (byte)-1  // 7 - Conflicts with the fan; set -ve if no stepper
+#define EXTRUDER_1_LOW_HEAT         (byte)64
+#define EXTRUDER_1_HIGH_HEAT        (byte)255
 
 
 #else

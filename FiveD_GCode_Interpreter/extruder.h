@@ -31,8 +31,6 @@ private:
     byte e_speed;
     int target_celsius;
     int max_celsius;
-    byte heater_low;
-    byte heater_high;
     byte heater_current;
     int extrude_step_count;
 
@@ -50,7 +48,7 @@ private:
     bool valve_open;
 
 // The pins we control
-    byte motor_dir_pin, motor_speed_pin, heater_pin, fan_pin, temp_pin, valve_dir_pin, valve_en_pin;
+    byte motor_dir_pin, motor_speed_pin, heater_pin, fan_pin, temp_pin, valve_dir_pin, valve_en_pin, heater_low, heater_high;
     signed int step_en_pin;
     
      byte wait_till_hot();
@@ -60,7 +58,7 @@ private:
      
 public:
 
-   extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin);
+   extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin, byte low_heat, byte high_heat);
    void wait_for_temperature();
    void valve_set(bool open, int dTime);
 
