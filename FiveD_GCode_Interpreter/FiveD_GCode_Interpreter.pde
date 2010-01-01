@@ -149,7 +149,7 @@ void loop()
 	manage_all_extruders();
         if (get_and_do_command())
         {
-                if (idling)
+                if (idling && POWER_SUPPLY_PIN > 0)
                 {
                         pinMode(POWER_SUPPLY_PIN, OUTPUT);
                         digitalWrite(POWER_SUPPLY_PIN, 0);  // Set the pin to GND to turn on power supply
