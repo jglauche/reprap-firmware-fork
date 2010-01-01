@@ -8,11 +8,11 @@
 // Arduino Mega: 3
 // Arudino Duemilanove w/ ATMega328P: 4
 
-#define MOTHERBOARD 4
+#define MOTHERBOARD 3
 
 // Set 1s where you have endstops; 0s where you don't
 #define ENDSTOPS_MIN_ENABLED 1
-#define ENDSTOPS_MAX_ENABLED 0
+#define ENDSTOPS_MAX_ENABLED 1
 
 //our command string length
 #define COMMAND_SIZE 128
@@ -33,19 +33,19 @@
 #define INCHES_TO_MM 25.4
 
 // define the parameters of our machine.
-#define X_STEPS_PER_MM   9.8482399079
+#define X_STEPS_PER_MM   10
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM)
 #define X_MOTOR_STEPS    400
-#define INVERT_X_DIR 0
+#define INVERT_X_DIR 1
 
-#define Y_STEPS_PER_MM   9.8482399079
+#define Y_STEPS_PER_MM   10
 #define Y_STEPS_PER_INCH (Y_STEPS_PER_MM*INCHES_TO_MM)
 #define Y_MOTOR_STEPS    400
 #define INVERT_Y_DIR 1
 
-#define Z_STEPS_PER_MM   160 // 200 steps per revoloution / 1.25 mm thread pitch
+#define Z_STEPS_PER_MM   320
 #define Z_STEPS_PER_INCH (Z_STEPS_PER_MM*INCHES_TO_MM)
-#define Z_MOTOR_STEPS    200
+#define Z_MOTOR_STEPS    400
 #define INVERT_Z_DIR 0
 
 // For when we have a stepper-driven extruder
@@ -58,18 +58,18 @@
 
 //our maximum feedrates
 #define FAST_XY_FEEDRATE 4000.0
-#define FAST_Z_FEEDRATE  60.0
+#define FAST_Z_FEEDRATE  150.0
 
 // Data for acceleration calculations
 // Comment out the next line to turn accelerations off
 //#define ACCELERATION_ON
 #define SLOW_XY_FEEDRATE 1000.0 // Speed from which to start accelerating
-#define SLOW_Z_FEEDRATE 20
+#define SLOW_Z_FEEDRATE 50
 
 // Set to 1 if enable pins are inverting
 // For RepRap stepper boards version 1.x the enable pins are *not* inverting.
 // For RepRap stepper boards version 2.x and above the enable pins are inverting.
-#define INVERT_ENABLE_PINS 1
+#define INVERT_ENABLE_PINS 0
 
 #if INVERT_ENABLE_PINS == 1
 #define ENABLE_ON LOW
