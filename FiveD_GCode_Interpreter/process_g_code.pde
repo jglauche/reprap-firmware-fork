@@ -290,7 +290,10 @@ bool process_string(char instruction[], int size)
                                 return true;
                                 
                         // Controlled move
-			case 1:
+			case 1:                          
+#if USE_EXTRUDER_CONTROLLER == false
+                                ex[extruder_in_use]->manage();  // jglauche: Forces temperature management to be called before a move. Doesn't seem to be called enough times otherwise. It's maybe fixing the symptoms, but works for me. 
+#endif
                                 qMove(fp);
                                 return true;
                                 
@@ -402,23 +405,23 @@ bool process_string(char instruction[], int size)
 				 */
 
 // jglauche: re-activate M101-M103 and M108 codes to support both 3d & 5d code
-
+//           no idea why mccoyn commended them out
 
 			//turn extruder on, forward
 			case 101:
 				ex[extruder_in_use]->set_direction(1);
-				//ex[extruder_in_use]->set_speed(extruder_speed);
+				ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
 
 			//turn extruder on, reverse
 			case 102:
 				ex[extruder_in_use]->set_direction(0);
-				//ex[extruder_in_use]->set_speed(extruder_speed);
+				ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
 
 			//turn extruder off
 			case 103:
-				//ex[extruder_in_use]->set_speed(0);
+				ex[extruder_in_use]->set_speed(0);
 				break;
 
 			//custom code for temperature control

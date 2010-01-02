@@ -260,7 +260,7 @@ void extruder::manage()
 }
 
 
-#if 0
+
 void extruder::set_speed(float sp)
 {
   // DC motor?
@@ -297,7 +297,7 @@ void extruder::set_speed(float sp)
   enableTimerInterrupt();
 }
 
-
+#if 0
 void extruder::interrupt()
 {
     if(!e_speed)
