@@ -13,8 +13,8 @@
 #define GCODE_Y	(1<<4)
 #define GCODE_Z	(1<<5)
 #define GCODE_I	(1<<6)
-#define GCODE_J	(1<<7)
-#define GCODE_K	(1<<8)
+#define GCODE_N	(1<<7)
+#define GCODE_CHECKSUM	(1<<8)
 #define GCODE_F	(1<<9)
 #define GCODE_S	(1<<10)
 #define GCODE_Q	(1<<11)
@@ -27,6 +27,12 @@
 	case ch: \
 		len = scan_int(str, &val, &seen, flag); \
 		break;
+
+#define PARSE_LONG(ch, str, len, val, seen, flag) \
+	case ch: \
+		len = scan_long(str, &val, &seen, flag); \
+		break;
+
 
 #define PARSE_FLOAT(ch, str, len, val, seen, flag) \
 	case ch: \
@@ -51,6 +57,9 @@ struct GcodeParser
     float S;
     float R;
     float Q;
+    int Checksum;
+    long N;
+    long LastLineNrRecieved;
 };
 
 
@@ -61,6 +70,14 @@ byte serial_count = 0;
 boolean comment = false;
 FloatPoint fp;
 FloatPoint sp;
+
+#define DEBUG_ECHO (0<<0)
+#define DEBUG_INFO (0<<1)
+#define DEBUG_ERRORS (0<<2)
+
+byte SendDebug = DEBUG_ECHO | DEBUG_INFO | DEBUG_ERRORS;
+
+ 
         
 // The following three inline functions are used for things like return to 0
 
@@ -151,7 +168,12 @@ bool get_and_do_command()
 	{
                 // Terminate string
                 cmdbuffer[serial_count] = 0;
-                
+                                
+                if(SendDebug & DEBUG_ECHO)
+                {
+                  Serial.print("Echo:");
+                  Serial.println(&cmdbuffer[0]);
+                }  
 		//process our command!
 		bool busy = process_string(cmdbuffer, serial_count);
 
@@ -160,7 +182,7 @@ bool get_and_do_command()
 
                 // Say we're ready for the next one
                 
-                if(debugstring[0] != 0)
+                if(debugstring[0] != 0 && (SendDebug & DEBUG_INFO))
                 {
                   Serial.print("ok ");
                   Serial.println(debugstring);
@@ -194,20 +216,21 @@ int parse_string(struct GcodeParser * gc, char instruction[ ], int size)
 		len = 0;
 		switch (instruction[ind])
 		{
-			  PARSE_INT('G', &instruction[ind+1], len, gc->G, gc->seen, GCODE_G);
-			  PARSE_INT('M', &instruction[ind+1], len, gc->M, gc->seen, GCODE_M);
-			  PARSE_INT('T', &instruction[ind+1], len, gc->T, gc->seen, GCODE_T);
+			PARSE_INT('G', &instruction[ind+1], len, gc->G, gc->seen, GCODE_G);
+			PARSE_INT('M', &instruction[ind+1], len, gc->M, gc->seen, GCODE_M);
+        	        PARSE_INT('T', &instruction[ind+1], len, gc->T, gc->seen, GCODE_T);
 			PARSE_FLOAT('S', &instruction[ind+1], len, gc->S, gc->seen, GCODE_S);
 			PARSE_FLOAT('P', &instruction[ind+1], len, gc->P, gc->seen, GCODE_P);
 			PARSE_FLOAT('X', &instruction[ind+1], len, gc->X, gc->seen, GCODE_X);
 			PARSE_FLOAT('Y', &instruction[ind+1], len, gc->Y, gc->seen, GCODE_Y);
 			PARSE_FLOAT('Z', &instruction[ind+1], len, gc->Z, gc->seen, GCODE_Z);
 			PARSE_FLOAT('I', &instruction[ind+1], len, gc->I, gc->seen, GCODE_I);
-			PARSE_FLOAT('J', &instruction[ind+1], len, gc->J, gc->seen, GCODE_J);
 			PARSE_FLOAT('F', &instruction[ind+1], len, gc->F, gc->seen, GCODE_F);
 			PARSE_FLOAT('R', &instruction[ind+1], len, gc->R, gc->seen, GCODE_R);
 			PARSE_FLOAT('Q', &instruction[ind+1], len, gc->Q, gc->seen, GCODE_Q);
 			PARSE_FLOAT('E', &instruction[ind+1], len, gc->E, gc->seen, GCODE_E);
+                        PARSE_LONG('N', &instruction[ind+1], len, gc->N, gc->seen, GCODE_N);
+			PARSE_INT('*', &instruction[ind+1], len, gc->Checksum, gc->seen, GCODE_CHECKSUM);                        
                         default:
 			  break;
 		}
@@ -232,18 +255,59 @@ bool process_string(char instruction[], int size)
 
 	//get all our parameters!
 	parse_string(&gc, instruction, size);
+
+        // Do we have lineNr and checksums in this gcode?
+        if((bool)(gc.seen & GCODE_CHECKSUM) | (bool)(gc.seen & GCODE_N))
+        {
+          // Check that if recieved a L code, we also got a C code. If not, one of them have been lost, and we have to reset queue
+          if( (bool)(gc.seen & GCODE_CHECKSUM) != (bool)(gc.seen & GCODE_N) )
+          {
+           if(SendDebug & DEBUG_ERRORS)
+             Serial.println("Serial Error:Recieved a LineNr code without a Checksum code or Checksum without LineNr");
+           FlushSerialRequestResend();
+           return false;
+          }
+          // Check checksum of this string. Flush buffers and re-request line of error is found
+          if(gc.seen & GCODE_CHECKSUM)  // if we recieved a line nr, we know we also recieved a Checksum, so check it
+            {
+            // Calc checksum.
+            byte checksum = 0;
+            byte count=0;
+            while(instruction[count] != '*')
+              checksum = checksum^instruction[count++];
+            // Check checksum.
+            if(gc.Checksum != (int)checksum)
+              {
+              if(SendDebug & DEBUG_ERRORS)
+                Serial.println("Serial Error: checksum mismatch");
+              FlushSerialRequestResend();
+              return false;
+              }
+          // Check that this lineNr is LastLineNrRecieved+1. If not, flush
+          if(!( (bool)(gc.seen & GCODE_M) && gc.M == 110)) // unless this is a reset-lineNr command
+            if(gc.N != gc.LastLineNrRecieved+1)
+                {
+                if(SendDebug & DEBUG_ERRORS)
+                  Serial.println("Serial Error: LineNr is not the last lineNr+1");
+                FlushSerialRequestResend();
+                return false;
+                }
+           //If we reach this point, communication is a succes, update our "last good line nr" and continue
+           gc.LastLineNrRecieved = gc.N;
+          }
+        }
+
+
 	/* if no command was seen, but parameters were, then use the last G code as 
 	 * the current command
 	 */
-	if ((!(gc.seen & (GCODE_G | GCODE_M | GCODE_T))) && 
-	    ((gc.seen != 0) &&
-		(last_gcode_g >= 0))
-	)
+	if ((!(gc.seen & (GCODE_G | GCODE_M | GCODE_T))) && ((gc.seen != 0) && (last_gcode_g >= 0)))
 	{
 		/* yes - so use the previous command with the new parameters */
 		gc.G = last_gcode_g;
 		gc.seen |= GCODE_G;
 	}
+
 	//did we get a gcode?
 	if (gc.seen & GCODE_G)
 	{
@@ -371,8 +435,12 @@ bool process_string(char instruction[], int size)
 				break;
 
 			default:
-				Serial.print("huh? G");
-				Serial.println(gc.G, DEC);
+				if(SendDebug & DEBUG_ERRORS)
+                                {
+                                  Serial.print("huh? G");
+				  Serial.println(gc.G, DEC);
+                                  FlushSerialRequestResend();
+                                }
 		  }
 	}
 
@@ -459,6 +527,19 @@ bool process_string(char instruction[], int size)
  				  digitalWrite(BASE_HEATER_PIN, gc.S != 0);
  				break;
 
+                        // Starting a new print, reset the gc.LastLineNrRecieved counter
+			case 110:
+				setupGcodeProcessor();
+ 				  if (gc.seen & GCODE_N)
+				  {
+			          if(SendDebug & DEBUG_INFO)
+                                    Serial.println("DEBUG:LineNr set");
+				  }
+				break;
+			case 111:
+				SendDebug = gc.S;
+				break;
+
 // The valve (real, or virtual...) is now the way to control any extruder (such as
 // a pressurised paste extruder) that cannot move using E codes.
 
@@ -474,8 +555,12 @@ bool process_string(char instruction[], int size)
                                                                 
 
 			default:
-				Serial.print("[FIRMWARE WARNING] invalid M-Code received: M");
-				Serial.println(gc.M, DEC);
+				if(SendDebug & DEBUG_ERRORS)
+                                  {
+                                    Serial.print("Huh? M");
+				    Serial.println(gc.M, DEC);
+                                    FlushSerialRequestResend();
+                                  }
 		}
 
                 
@@ -535,5 +620,37 @@ int scan_int(char *str, int *valp, unsigned int *seen, unsigned int flag)
 	return len;	/* length of number */
 }
 
+int scan_long(char *str, long *valp, unsigned int *seen, unsigned int flag)
+{
+	long res;
+	int len;
+	char *end;
 
+	res = strtol(str, &end, 10);
+	len = end - str;
+
+	if (len > 0)
+	{
+		*valp = res;
+		*seen |= flag;
+	}
+	else
+		*valp = 0;
+          
+	return len;	/* length of number in ascii world */
+}
+
+
+void setupGcodeProcessor()
+{
+  gc.LastLineNrRecieved = -1;
+}
+
+void FlushSerialRequestResend()
+{
+  char buffer[100]="Resend:";
+  ltoa(gc.LastLineNrRecieved+1, buffer+7, 10);
+  Serial.flush();
+  Serial.println(buffer);
+}
 
