@@ -73,7 +73,7 @@ FloatPoint sp;
 
 #define DEBUG_ECHO (0<<0)
 #define DEBUG_INFO (0<<1)
-#define DEBUG_ERRORS (0<<2)
+#define DEBUG_ERRORS (1<<2)
 
 byte SendDebug = DEBUG_ECHO | DEBUG_INFO | DEBUG_ERRORS;
 
@@ -280,6 +280,10 @@ bool process_string(char instruction[], int size)
               {
               if(SendDebug & DEBUG_ERRORS)
                 Serial.println("Serial Error: checksum mismatch");
+                  Serial.print("want: ");
+                  Serial.println((int)checksum);
+                  Serial.print("got: ");
+                  Serial.println(gc.Checksum);
               FlushSerialRequestResend();
               return false;
               }
@@ -289,6 +293,10 @@ bool process_string(char instruction[], int size)
                 {
                 if(SendDebug & DEBUG_ERRORS)
                   Serial.println("Serial Error: LineNr is not the last lineNr+1");
+                  Serial.print("want: ");
+                  Serial.println(gc.LastLineNrRecieved+1);
+                  Serial.print("got: ");
+                  Serial.println(gc.N);
                 FlushSerialRequestResend();
                 return false;
                 }
