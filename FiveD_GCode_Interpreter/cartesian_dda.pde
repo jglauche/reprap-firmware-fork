@@ -421,6 +421,15 @@ void cartesian_dda::disable_steppers()
 #endif
 }
 
+
+
+void cartesian_dda::kill()
+ {
+        live = false;
+        nullmove = false;
+        disable_steppers();
+}
+
 /*
 
 void cartesian_dda::delayMicrosecondsInterruptible(unsigned int us)

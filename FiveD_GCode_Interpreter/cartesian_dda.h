@@ -101,6 +101,9 @@ public:
   
   bool active();
   
+  // Kill - stop all activity and turn off steppers
+  void kill();
+  
   // True for mm; false for inches
   
   void set_units(bool using_mm);

@@ -529,17 +529,19 @@ bool process_string(char instruction[], int size)
 
                         // Starting a new print, reset the gc.LastLineNrRecieved counter
 			case 110:
-				setupGcodeProcessor();
- 				  if (gc.seen & GCODE_N)
+				if (gc.seen & GCODE_N)
 				  {
-			          if(SendDebug & DEBUG_INFO)
+			          gc.LastLineNrRecieved = gc.N;
+ 				  if(SendDebug & DEBUG_INFO)
                                     Serial.println("DEBUG:LineNr set");
 				  }
 				break;
 			case 111:
 				SendDebug = gc.S;
 				break;
-
+			case 112:
+				cancelAndClearQueue();
+				break;
 // The valve (real, or virtual...) is now the way to control any extruder (such as
 // a pressurised paste extruder) that cannot move using E codes.
 

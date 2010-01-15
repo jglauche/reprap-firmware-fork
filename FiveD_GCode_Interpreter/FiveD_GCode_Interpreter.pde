@@ -190,6 +190,13 @@ inline bool qEmpty()
    return tail == head && !cdda[tail]->active();
 }
 
+inline void cancelAndClearQueue()
+{
+	tail = head;	// clear buffer
+	for(int i=0;i<BUFFER_SIZE;i++)
+		cdda[i]->kill();
+}
+
 inline void qMove(const FloatPoint& p)
 {
   while(qFull()) delay(WAITING_DELAY);
