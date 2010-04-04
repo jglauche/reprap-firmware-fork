@@ -33,15 +33,15 @@
 #define INCHES_TO_MM 25.4
 
 // define the parameters of our machine.
-#define X_STEPS_PER_MM   (400.0/15.0/2.5)
+#define X_STEPS_PER_MM   10
 #define X_STEPS_PER_INCH (X_STEPS_PER_MM*INCHES_TO_MM)
 #define X_MOTOR_STEPS    400
 #define INVERT_X_DIR 1
 
-#define Y_STEPS_PER_MM   (400.0/15.0/2.5)
+#define Y_STEPS_PER_MM   10
 #define Y_STEPS_PER_INCH (Y_STEPS_PER_MM*INCHES_TO_MM)
 #define Y_MOTOR_STEPS    400
-#define INVERT_Y_DIR 1
+#define INVERT_Y_DIR 0
 
 #define Z_STEPS_PER_MM   320
 #define Z_STEPS_PER_INCH (Z_STEPS_PER_MM*INCHES_TO_MM)

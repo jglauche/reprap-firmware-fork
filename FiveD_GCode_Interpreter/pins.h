@@ -183,15 +183,15 @@
 
 
 //extruder pins
-#define EXTRUDER_0_MOTOR_SPEED_PIN   (byte)9
-#define EXTRUDER_0_MOTOR_DIR_PIN     (byte)32
-#define EXTRUDER_0_HEATER_PIN        (byte)8
+#define EXTRUDER_0_MOTOR_SPEED_PIN   (byte)4
+#define EXTRUDER_0_MOTOR_DIR_PIN     (byte)31
+#define EXTRUDER_0_HEATER_PIN        (byte)6
 #define EXTRUDER_0_FAN_PIN           (byte)-1
-#define EXTRUDER_0_TEMPERATURE_PIN  (byte)3    // 57 Analogue input 3
+#define EXTRUDER_0_TEMPERATURE_PIN  (byte)0    // 57 Analogue input 3
 #define EXTRUDER_0_VALVE_DIR_PIN     (byte)-1
 #define EXTRUDER_0_VALVE_ENABLE_PIN  (byte)-1  // Valve needs to be redesigned not to need this
 #define EXTRUDER_0_STEP_ENABLE_PIN  (signed int)-1
-#define EXTRUDER_0_LOW_HEAT         (byte)170
+#define EXTRUDER_0_LOW_HEAT         (byte)110
 #define EXTRUDER_0_HIGH_HEAT        (byte)255
 
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
