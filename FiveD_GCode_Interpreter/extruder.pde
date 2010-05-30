@@ -6,7 +6,7 @@
 
 // Keep all extruders up to temperature etc.
 
-void manage_all_extruders()
+inline void manage_all_extruders()
 {
     for(byte i = 0; i < EXTRUDER_COUNT; i++)
        ex[i]->manage();
@@ -49,6 +49,7 @@ extruder::extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin,
          step_en_pin = se_pin;
          heater_low = low_heat;
          heater_high = high_heat;
+
          
 	//setup our pins
 	pinMode(motor_dir_pin, OUTPUT);
@@ -178,11 +179,16 @@ int extruder::get_target_temperature()
 *  Samples the temperature and converts it to degrees celsius.
 *  Returns degrees celsius.
 */
-int extruder::get_temperature()
+inline int extruder::get_temperature()
 {
 #ifdef USE_THERMISTOR
-	int raw = sample_temperature();
-
+/*
+  change by tonokip. 
+  Comment by joaz: sample_temperature usually reads 3 samples and divide it by 3. I don't see the point and it'll take too long since it's called before each movement now.
+*/ 
+//	int raw = sample_temperature();
+        int raw = analogRead(temp_pin);
+  
 	int celsius = 0;
 	byte i;
 
@@ -236,27 +242,57 @@ int extruder::sample_temperature()
   Manages extruder functions to keep temps, speeds etc
   at the set levels.  Should be called only by manage_all_extruders(),
   which should be called in all non-trivial loops.
-  o If temp is too low, don't start the motor
-  o Adjust the heater power to keep the temperature at the target
  */
-void extruder::manage()
+inline void extruder::manage()
 {
-	//make sure we know what our temp is.
+/*
 	int current_celsius = get_temperature();
         byte newheat = 0;
   
         //put the heater into high mode if we're not at our target.
         if (current_celsius < target_celsius)
                 newheat = heater_high;
-        //put the heater on low if we're at our target.
-        else if (current_celsius < max_celsius)
+
+        //put the heater on low if we're at our target.        
+        if (current_celsius >= target_celsius)
                 newheat = heater_low;
+        
+*/
+        
+        int newheat = heater_current;
+
+
+        if (last_temp_update - millis() > 1000){        
+          int temp = get_temperature();        
+          int offset = temp-target_celsius;
+  
+          if (offset >= 10){     
+            newheat -= 5;
+          }else if(offset >= 1 ){
+            newheat -= 1;
+          }else if(offset <= -1){
+            newheat += 1;
+          }else if(offset <= -10){
+            newheat += 5;
+          }
+          
+          if(newheat > heater_high)
+            newheat = heater_high;
+          if(newheat < heater_low)
+            newheat = heater_low;
+          
+          last_temp_update = millis();
+        }
+        
+        if (target_celsius == 0)
+          newheat = 0;
         
         // Only update heat if it changed
         if (heater_current != newheat) {
                 heater_current = newheat;
                 analogWrite(heater_pin, heater_current);
-        }
+        }     
+        
 }
 
 
