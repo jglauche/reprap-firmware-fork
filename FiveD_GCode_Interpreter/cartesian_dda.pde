@@ -188,7 +188,8 @@ void cartesian_dda::dda_step()
    
   do
   {
-		x_can_step = can_step(X_MIN_PIN, X_MAX_PIN, current_steps.x, target_steps.x, x_direction);
+		manage_all_extruders();
+                x_can_step = can_step(X_MIN_PIN, X_MAX_PIN, current_steps.x, target_steps.x, x_direction);
 		y_can_step = can_step(Y_MIN_PIN, Y_MAX_PIN, current_steps.y, target_steps.y, y_direction);
 		z_can_step = can_step(Z_MIN_PIN, Z_MAX_PIN, current_steps.z, target_steps.z, z_direction);
                 e_can_step = can_step(-1, -1, current_steps.e, target_steps.e, e_direction);
