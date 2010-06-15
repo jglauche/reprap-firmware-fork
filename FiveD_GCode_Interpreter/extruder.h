@@ -47,9 +47,6 @@ private:
     bool e_direction;
     bool valve_open;
 
-    unsigned long last_temp_update;
-
-
 // The pins we control
     byte motor_dir_pin, motor_speed_pin, heater_pin, fan_pin, temp_pin, valve_dir_pin, valve_en_pin, heater_low, heater_high;
     signed int step_en_pin;
@@ -58,6 +55,7 @@ private:
      //byte wait_till_cool();
      void temperature_error(); 
      int sample_temperature();
+     
 public:
 
    extruder(byte md_pin, byte ms_pin, byte h_pin, byte f_pin, byte t_pin, byte vd_pin, byte ve_pin, signed int se_pin, byte low_heat, byte high_heat);

@@ -194,7 +194,6 @@
 #define EXTRUDER_0_LOW_HEAT         (byte)110
 #define EXTRUDER_0_HIGH_HEAT        (byte)255
 
-
 #define EXTRUDER_1_MOTOR_SPEED_PIN   (byte)-1
 #define EXTRUDER_1_MOTOR_DIR_PIN    (byte)-1
 #define EXTRUDER_1_HEATER_PIN        (byte)-1
