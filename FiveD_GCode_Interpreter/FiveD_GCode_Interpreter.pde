@@ -71,6 +71,8 @@ static cartesian_dda cdda1;
 static cartesian_dda cdda2;
 static cartesian_dda cdda3;
 
+byte extruder_check = 0;
+
 volatile byte head;
 volatile byte tail;
 
@@ -89,15 +91,22 @@ FloatPoint where_i_am;
 
 // Our interrupt function
 
+
 ISR(TIMER1_COMPA_vect) 
 {
   disableTimerInterrupt();
-  
-  if(cdda[tail]->active())
+  if(cdda[tail]->active()){
+   /* extruder_check++;
+    if(extruder_check == 200){
+      ex[extruder_in_use]->manage();
+      extruder_check=0;
+    }*/
+
     cdda[tail]->dda_step();
-  else
+  }else{
     dQMove();
-    
+  }
+  
   enableTimerInterrupt();
 }
 

@@ -162,7 +162,7 @@ void extruder::valve_set(bool open, int dTime)
 void extruder::set_target_temperature(int temp)
 {
 	target_celsius = temp;
-	max_celsius = (temp*11)/10;
+	max_celsius = temp + 10; // (temp*11)/10;
 
         // If we've turned the heat off, we might as well disable the extrude stepper
        // if(target_celsius < 1)
@@ -243,14 +243,23 @@ void extruder::manage()
 {
 	//make sure we know what our temp is.
 	int current_celsius = get_temperature();
+        // guess that thermistor wire is broken when it reads "0"
+        if(current_celsius == 0){
+          return;
+        }
+        
         byte newheat = 0;
-  
+        
         //put the heater into high mode if we're not at our target.
         if (current_celsius < target_celsius)
                 newheat = heater_high;
         //put the heater on low if we're at our target.
-        else if (current_celsius < max_celsius)
+        else if (current_celsius > target_celsius){
                 newheat = heater_low;
+        }
+        
+        if (current_celsius >= max_celsius)
+                newheat = 0;
         
         // Only update heat if it changed
         if (heater_current != newheat) {

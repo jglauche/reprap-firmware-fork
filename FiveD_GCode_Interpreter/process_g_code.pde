@@ -65,6 +65,8 @@ struct GcodeParser
 
 //our command string
 char cmdbuffer[COMMAND_SIZE];
+
+
 char c = '?';
 byte serial_count = 0;
 boolean comment = false;
@@ -138,13 +140,13 @@ bool get_and_do_command()
 	if (Serial.available())
 	{
 		c = Serial.read();
-                if(c == '\r')
+                if(c == '\r') // omg?
                   c = '\n';
                 // Throw away control chars except \n
                 if(c >= ' ' || c == '\n')
                 {
 
-		  //newlines are ends of commands.
+		  //newlin  es are ends of commands.
 		  if (c != '\n')
 		  {
 			// Start of comment - ignore any bytes received from now on
@@ -174,7 +176,8 @@ bool get_and_do_command()
                   Serial.print("Echo:");
                   Serial.println(&cmdbuffer[0]);
                 }  
-		//process our command!
+		               
+                //process our command!
 		bool busy = process_string(cmdbuffer, serial_count);
 
 		//clear command.
@@ -197,7 +200,6 @@ bool get_and_do_command()
 	  return false;
 	}
 }
-
 
 
 int parse_string(struct GcodeParser * gc, char instruction[ ], int size)
@@ -485,20 +487,37 @@ bool process_string(char instruction[], int size)
 
 			//turn extruder on, forward
 			case 101:
-				ex[extruder_in_use]->set_direction(1);
+#if STEPPER_EXTRUDERS == 0				
+                                ex[extruder_in_use]->set_direction(1);
 				ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
-
+#endif
+#if ANTI_OOZE == 1
+                                fp = where_i_am;
+                                fp.e += 10;
+                                fp.f = 2000;
+                                qMove(fp);
+#endif
 			//turn extruder on, reverse
 			case 102:
-				ex[extruder_in_use]->set_direction(0);
+#if STEPPER_EXTRUDERS == 0
+        			ex[extruder_in_use]->set_direction(0);
 				ex[extruder_in_use]->set_speed(extruder_speed);
 				break;
-
+#endif
 			//turn extruder off
 			case 103:
+#if STEPPER_EXTRUDERS == 0
 				ex[extruder_in_use]->set_speed(0);
 				break;
+#endif
+#if ANTI_OOZE == 1
+                                fp = where_i_am;
+                                fp.e -= 10;
+                                fp.f = 2000;
+                                qMove(fp);
+#endif
+
 
 			//custom code for temperature control
 			case 104:
@@ -526,8 +545,10 @@ bool process_string(char instruction[], int size)
 
 			//set max extruder speed, 0-255 PWM
 			case 108:
-				if (gc.seen & GCODE_S)
+#if STEPPER_EXTRUDERS == 0
+        			if (gc.seen & GCODE_S)
 					extruder_speed = gc.S;
+#endif
 				break;
 
  			case 109: // Base plate heater on/off

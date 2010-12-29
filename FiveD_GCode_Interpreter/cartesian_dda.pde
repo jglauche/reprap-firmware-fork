@@ -290,6 +290,7 @@ void cartesian_dda::dda_step()
                   else
                     timestep = current_steps.f;
                   timestep = calculate_feedrate_delay((float) timestep);
+
                   setTimer(timestep);
                 }
   } while (!real_move && f_can_step);
