@@ -83,7 +83,8 @@
 
 // Set to one if sensor outputs inverting (ie: 1 means open, 0 means closed)
 // RepRap opto endstops are *not* inverting.
-#define ENDSTOPS_INVERTING 0
+// Shapercube Mechanical Endstops are inverted
+#define ENDSTOPS_INVERTING 1
 
 // Inline interrupt control functions
 

@@ -139,6 +139,17 @@ void setup()
   where_i_am.z = 0.0;
   where_i_am.e = 0.0;
   where_i_am.f = SLOW_XY_FEEDRATE;
+
+  // Hack for using Mechanical Endstops
+  // enable internal Pull-up resistors and voila - connect mechanical endstops directly!
+  digitalWrite(X_MIN_PIN, HIGH);
+  digitalWrite(X_MAX_PIN, HIGH);
+  digitalWrite(Y_MIN_PIN, HIGH);
+  digitalWrite(Y_MAX_PIN, HIGH);
+  digitalWrite(Z_MIN_PIN, HIGH);
+  digitalWrite(Z_MAX_PIN, HIGH);
+  
+
   
   Serial.begin(19200);
   Serial.println("start");
